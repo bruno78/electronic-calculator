@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Calculator</title>
+
+  <!-- Compiled and minified CSS -->
+  <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+  <style type="text/css">
+
+    html,body {height: 100%;}
+
+    body {
+      background-color: #f6f97a;/*#26a69a;*/
+    }
+    #calculator{
+      background-color: pink;
+      position: absolute;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      top:50%;
+      left:50%;
+      width: 300px;
+      height: 490px;
+      align-content: center;
+    }
+
+    #title {
+      font-family: 'Pacifico', cursive;
+      font-size: 27px;
+    }
+
+    #title h2 {
+      font-size: 27px;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      color: #b450e4;
+      text-shadow: 2px 2px 4px #928f8f;
+    }
+    #display{
+      background-color: #c4f28c;
+      height: 70px;
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #entry {
+      margin-right: 10px;
+      font-size: 40px;
+      padding-top: 2px;
+      margin-bottom: 3px;
+      color: #7a9e4f;
+    }
+    #history {
+      margin-right: 14px;
+      margin-top: 0px;
+      color: grey;
+    }
+    #pad {
+      margin-top: 15px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 92%;
+    }
+    a {
+      margin: 5px;
+    }
+    button {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+    }
+    button:focus {
+      background-color: transparent !important;
+    }
+
+    #zero {
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      width: 125px;
+    }
+    #invisible {
+      visibility: hidden;
+    }
+    #equal {
+      position: absolute;
+      margin-left: 9px;
+      margin-top: -58.5px;
+      height: 120.5px;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      line-height: 120px;
+      width: 56px;
+      padding-left: 20px;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <!-- browser-sync start --server --directory --files --browser "**/*" -->
+  <div class="container">
+    <div id="calculator" class="z-depth-4">
+      <div id="title">
+        <h2 class="center-align">Tropicália Calculator</h2>
+      </div>
+      <div id="display">
+        <h4 class="right-align" id="entry">0</h4>
+        <p class="right-align" id="history">0</p>
+      </div>
+      <div id="pad">
+        <a class="btn-floating btn-large waves-effect waves-light red" >AC</a>
+        <a class="btn-floating btn-large waves-effect waves-light red">CE</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="/">&divide;</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="*">x</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="7">7</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="8">8</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="9">9</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="-">-</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="4">4</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="5">5</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="6">6</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="+">+</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="1">1</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="2">2</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value="3">3</a>
+        <a class="btn-floating btn-large waves-effect waves-light" id="invisible">N</a>
+        <a class="btn btn-large waves-effect waves-light" id="zero" value="0">0</a>
+        <a class="btn-floating btn-large waves-effect waves-light" value".">.</a>
+        <a class="btn btn-large waves-effect waves-light blue valign-wrapper" id="equal" value="=">=</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      
+    })
+  </script>
+</body>
+</html>
