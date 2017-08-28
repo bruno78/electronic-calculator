@@ -164,13 +164,11 @@
         // make sure that either the input or the last value is a number
         else if((!isNaN(input) && isNaN(inputs[inputs.length-1])) || (isNaN(input) && !isNaN(inputs[inputs.length-1]))) {
           inputs.push(input);
-          toDisplay(input);
         }
         // make sure after getTotal if another gets pushed it resets the calculator
         else if(inputs[0] !== "" && !isNaN(input) && inputs.length === 1) {
           inputs[0] = "";
           inputs.push(input);
-          toDisplay(input);
         }
         // make sure there is no two operators together
         else if(isNaN(input[inputs.length-1]) && isNaN(input)){
@@ -178,23 +176,12 @@
         }
         else {
           inputs.push(input);
-          toDisplay(input);
         }
 
         update();
       }
-
-      function toDisplay(input){
-        if (currValue === "0" || isNaN(input) || isNaN(currValue)) {
-          currValue = input;
-        }
-        else {
-          currValue += input;
-        }
-      }
-
+      
       function update(){
-
         if(inputs.length === 1 && inputs[0] === "") {
           totalString = "0";
           currValue = "0"
@@ -204,6 +191,7 @@
         }
         $("#history").html(totalString);
         $("#entry").html(currValue);
+
       }
 
       function getTotal(){
@@ -225,6 +213,7 @@
         else if(this.id === "ce") {
           if(inputs.length === 1 ) {
             inputs = [""];
+            currValue = "0";
           }
           else {
             inputs.pop();
