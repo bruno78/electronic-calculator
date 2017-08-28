@@ -79,7 +79,7 @@
       background-color: transparent !important;
     }
 
-    #zero {
+    .zero {
       border-bottom-left-radius: 30px;
       border-bottom-right-radius: 30px;
       border-top-left-radius: 30px;
@@ -89,7 +89,7 @@
     #invisible {
       visibility: hidden;
     }
-    #equal {
+    .equal {
       position: absolute;
       margin-left: 9px;
       margin-top: -58.5px;
@@ -133,9 +133,9 @@
         <a class="btn-floating btn-large waves-effect waves-light" id="2">2</a>
         <a class="btn-floating btn-large waves-effect waves-light" id="3">3</a>
         <a class="btn-floating btn-large waves-effect waves-light" id="invisible">N</a>
-        <a class="btn btn-large waves-effect waves-light" id="zero" id="0">0</a>
+        <a class="btn btn-large waves-effect waves-light zero" id="0">0</a>
         <a class="btn-floating btn-large waves-effect waves-light" id=".">.</a>
-        <a class="btn btn-large waves-effect waves-light blue valign-wrapper" id="equal" id="=">=</a>
+        <a class="btn btn-large waves-effect waves-light blue valign-wrapper equal" id="=">=</a>
       </div>
 
     </div>
@@ -147,44 +147,73 @@
     $(document).ready(function(){
       var inputs=[""];
       var totalString;
-      var operators1 = ["+", "-", "/", "*"];
-      var operators2 = ["."];
-      var nums = [0,1,2,3,4,5,6,7,8,9,0];
+      var operators1 = ["+", "/", "*"];
+      var operators2 = [".", "-"];
+      var currValue = 0;
 
       function getValue(input){
 
-        // making sure there is no "." duplicated
-        if(operators2.includes(inputs[-1] === true && input === ".")){
+        // make sure there is no "." duplicated!
+        if(inputs.includes(".") === true && input === "."){
           console.log("Duplicate '.'");
         }
-        // making sure that the first value is a number
-        else if(inputs.length === 1 && !isNaN(inputs[0])){
-          inputs.push(input)
+        // make sure that the first value is a number
+        else if(inputs[0] === "" && inputs.length === 1 && operators1.indexOf(input) !== -1){
+          console.log("Invalid input!");
         }
-        // making sure that either the input or the last value is a number
-        else if((!isNaN(input) && isNaN(inputs[-1])) || (isNaN(input) && !isNaN(inputs[-1]))) {
-          inputs.push(input)
+        // make sure that either the input or the last value is a number
+        else if((!isNaN(input) && isNaN(inputs[inputs.length-1])) || (isNaN(input) && !isNaN(inputs[inputs.length-1]))) {
+          inputs.push(input);
+          toDisplay(input);
+        }
+        // make sure after getTotal if another gets pushed it resets the calculator
+        else if(inputs[0] !== "" && !isNaN(input) && inputs.length === 1) {
+          inputs[0] = "";
+          inputs.push(input);
+          toDisplay(input);
+        }
+        // make sure there is no two operators together
+        else if(isNaN(input[inputs.length-1]) && isNaN(input)){
+          console.log("Invalid operation!")
         }
         else {
-          inputs.push(input)
+          inputs.push(input);
+          toDisplay(input);
+        }
+
+        update();
+      }
+
+      function toDisplay(input){
+        if (currValue === "0" || isNaN(input) || isNaN(currValue)) {
+          currValue = input;
+        }
+        else {
+          currValue += input;
         }
       }
 
       function update(){
 
-        if(inputs.length() === 1 && inputs[0] === "") {
+        if(inputs.length === 1 && inputs[0] === "") {
           totalString = "0";
+          currValue = "0"
         }
         else {
           totalString = inputs.join("");
         }
-
         $("#history").html(totalString);
+        $("#entry").html(currValue);
       }
 
       function getTotal(){
-        totalString = inputs.joint("");
-        $("#history").html(eval(totalString));
+        totalString = inputs.join("");
+        total = eval(totalString);
+
+        $("#history, #entry").html(total);
+
+        inputs =[total.toString()];
+
       }
 
       $("a").on("click", function(){
@@ -194,18 +223,23 @@
           update();
         }
         else if(this.id === "ce") {
-          inputs.pop();
+          if(inputs.length === 1 ) {
+            inputs = [""];
+          }
+          else {
+            inputs.pop();
+          }
           update();
         }
         else if(this.id === "=") {
           getTotal();
         }
         else {
-          if(inputs[-1].indexOf()){
-
+          if(inputs[inputs.length-1].indexOf("+", "-", "/", "*", ".") === -1){
+            getValue(this.id);
           }
           else {
-
+            getValue(this.id);
           }
         }
       });
