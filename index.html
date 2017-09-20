@@ -43,7 +43,7 @@
       text-shadow: 2px 2px 4px #928f8f;
     }
     #display{
-      background-color: #c4f28c;
+      background-color: #a7ea54; /*#c4f28c;*/
       height: 70px;
       width: 85%;
       margin-left: auto;
@@ -156,50 +156,116 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
   <script type="text/javascript">
+
     $(document).ready(function(){
-      var inputs=[""];
-      var totalString;
+      var inputs = [];
+      var operations = [];
       var operators1 = ["+", "/", "*"];
-      var operators2 = [".", "-"];
-      var currValue = 0;
+      var currValue, total = 0;
+      var totalString;
+      var totalCalled = false;
+      var minus = false;
 
-      function getValue(input){
+      function getValue(input) {
 
-        // make sure there is no "." duplicated!
-        if(inputs.includes(".") === true && input === "."){
-          console.log("Duplicate '.'");
+
+        if (totalCalled) {
+          if (input === "." || !isNaN(input)) {
+            inputs = [];
+            operations = [];
+            totalCalled = false;
+          }
+          else {
+            totalCalled = false;
+            inputs = [total.toString()];
+            operations = [];
+          }
         }
-        // make sure that the first value is a number
-        else if(inputs[0] === "" && inputs.length === 1 && operators1.indexOf(input) !== -1){
-          console.log("Invalid input!");
-        }
-        // make sure that either the input or the last value is a number
-        else if((!isNaN(input) && isNaN(inputs[inputs.length-1])) || (isNaN(input) && !isNaN(inputs[inputs.length-1]))) {
+
+        // if the first value a '.' adds 0 in front of it.
+       if (inputs.length === 0 && input === '.') {
+          inputs.push("0");
           inputs.push(input);
         }
-        // make sure after getTotal if another gets pushed it resets the calculator
-        else if(inputs[0] !== "" && !isNaN(input) && inputs.length === 1) {
-          inputs[0] = "";
+        // handling negative values
+        else if (operations.length === 0 && inputs.length === 0 && input === '-') {
+          minus = true;
+        }
+        // make sure an operator is not the first value.
+        else if (inputs.length === 0 && operators1.includes(input)) {
+          console.error("Operator can't be first value!");
+        }
+        // make sure '.' is not duplicated.
+        else if (inputs.includes('.') && input === '.') {
+          console.error("Duplicated '.'");
+        }
+        // handling negative numbers
+        else if (operators1.includes(inputs[0]) && input === '-') {
+          inputs.shift();
+          minus = true;
+        }
+        // make sure operator is not duplicated.
+        else if ( (operators1.includes(inputs[0]) && operators1.includes(input)) ||
+                  (inputs.length === 1 && inputs[0] === '-' && (operators1.includes(input) || input === '-')) ) {
+          console.error("Operator is duplicated!");
+          input = undefined;
+        }
+        // make sure 0s are handled
+        else if (inputs[0] === '0' && inputs.length === 1 && input !== '.') {
+          inputs.shift();
           inputs.push(input);
         }
-        // make sure there is no two operators together
-        else if(isNaN(input[inputs.length-1]) && isNaN(input)){
-          console.log("Invalid operation!")
+        // handle minus operator
+        else if (minus && !isNaN(input)) {
+          inputs = ['-'];
+          inputs.push(input)
+          minus = false;
+        }
+        // numbers get added to operations as soon as operator appears
+        else if (inputs.length > 0 && (operators1.includes(input) || input === '-')) {
+          operations.push(inputs.join(''));
+          operations.push(input);
+          inputs = [input];
+        }
+        // make sure if the current display value is an operator it gets handled
+        else if ((operators1.includes(inputs[0]) && !isNaN(input)) ||
+                 (inputs.length === 1 && inputs[0] === '-')) {
+          inputs.shift();
+          inputs.push(input);
+        }
+        // handles decimals after an operator
+        else if ((operators1.includes(inputs[0])) && input === '.') {
+          inputs.shift();
+          inputs.push('0');
+          inputs.push(input);
         }
         else {
           inputs.push(input);
         }
 
+        console.log("inputs[0] === " + inputs[0])
+
+        console.log("Inputs " + inputs.join(''));
+        console.log("Operations " + operations);
         update();
       }
 
       function update(){
-        if(inputs.length === 1 && inputs[0] === "") {
-          totalString = "0";
-          currValue = "0"
+        if(inputs.length === 0) {
+          currValue = "0";
         }
         else {
-          totalString = inputs.join("");
+          currValue = inputs.join("");
+        }
+        if(operations.length === 0) {
+          totalString = "0";
+        }
+        else {
+          totalString = operations.join(" ");
+        }
+        if (currValue.length > 11 || totalString.length > 25) {
+          currValue = "Error";
+          totalString = "Operation too long!"
         }
         $("#history").html(totalString);
         $("#entry").html(currValue);
@@ -207,25 +273,50 @@
       }
 
       function getTotal(){
-        totalString = inputs.join("");
-        total = eval(totalString);
-
-        $("#history, #entry").html(total);
-
-        inputs =[total.toString()];
-
+        operations.push(inputs.join(""))
+        total = round(eval(operations.join("")));
+        totalString = operations.join(" ") + " = " + total;
+        totalCalled = true;
+        if (total.toString().length > 11) {
+          total = "Error"
+          totalString = "Operation too long!"
+        }
+        $("#entry").html(total)
+        $("#history").html(totalString);
       }
 
-      $("a").on("click", function(){
+      function round(total){
+        total = total.toString().split('');
+        if (total.indexOf('.') !== -1) {
+          var valTest = total.slice(total.indexOf('.') + 1, total.length);
+          total = total.slice(0, total.indexOf('.') + 1);
+          var i = 0;
+          while (valTest[i] < 1) {
+            i++
+          }
+          valTest = valTest.join('').slice(0, i + 2);
+          if (valTest[valTest.length-1] === '0') {
+            valTest = valTest.slice(0, -1);
+          }
+          return total.join('') + valTest;
+        } else {
+          return total.join('');
+        }
+      }
 
+      $("#pad").find("a").on("click", function(){
         if(this.id === "ac") {
-          inputs = [""];
+          inputs = [];
+          operations = [];
           update();
         }
         else if(this.id === "ce") {
-          if(inputs.length === 1 ) {
-            inputs = [""];
+          if(inputs.length === 0 ) {
             currValue = "0";
+          }
+          else if (totalCalled){
+            inputs = [];
+            operations = [];
           }
           else {
             inputs.pop();
@@ -233,18 +324,14 @@
           update();
         }
         else if(this.id === "=") {
-          getTotal();
+          if(!totalCalled){
+            getTotal();
+          }
         }
         else {
-          if(inputs[inputs.length-1].indexOf("+", "-", "/", "*", ".") === -1){
-            getValue(this.id);
-          }
-          else {
-            getValue(this.id);
-          }
+          getValue(this.id);
         }
       });
-
     })
   </script>
 </body>
