@@ -273,7 +273,12 @@
       }
 
       function getTotal(){
-        operations.push(inputs.join(""))
+        if(isNaN(operations[operations.length-1]) && isNaN(inputs.join(""))) {
+          operations.pop();
+        }
+        else {
+          operations.push(inputs.join(""))
+        }
         total = round(eval(operations.join("")));
         totalString = operations.join(" ") + " = " + total;
         totalCalled = true;
